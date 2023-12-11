@@ -1,3 +1,5 @@
+# https://zerojudge.tw/ShowProblem?problemid=m370
+
 line1 = input()
 str1, str2 = line1.split(" ")
 mouse_pos, food_cnt = int(str1), int(str2)
