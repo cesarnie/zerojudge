@@ -3,18 +3,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int find_vertical(int cols, int rows, int* data, int* sum) {
+int SUM = 0;
+int COLS = 0;
+int ROWS = 0;
+int* DATA = NULL;
+
+int print_grid() {
+    for (int r = 0; r < ROWS; ++r) {
+        for (int c = 0; c < COLS; ++c) {
+            printf("%2d ", DATA[r * COLS + c]);
+        }
+        printf("\n");
+    }
+    printf("sum=%d\n", SUM);
+}
+
+int find_vertical() {
     int find = 0;
-    for (int col = 0; col < cols; col++) {
-        for (int row = 0; row < rows; row++) {
-            int top = data[row * cols + col];
-            for (int row2 = row + 1; row2 < rows; row2++) {
-                if (data[row2 * cols + col] >= 0) {
-                    if (data[row2 * cols + col] == top) {
-                        *sum += top;
-                        data[row * cols + col] = -1;
-                        data[row2 * cols + col] = -1;
+    for (int col = 0; col < COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            int top = DATA[row * COLS + col];
+            for (int row2 = row + 1; row2 < ROWS; row2++) {
+                if (DATA[row2 * COLS + col] >= 0) {
+                    if (DATA[row2 * COLS + col] == top) {
+                        SUM += top;
+                        DATA[row * COLS + col] = -1;
+                        DATA[row2 * COLS + col] = -1;
                         find += 1;
+                        print_grid();
                     }
                     break;
                 }
@@ -24,19 +40,20 @@ int find_vertical(int cols, int rows, int* data, int* sum) {
     return find;
 }
 
-int find_horizontal(int cols, int rows, int* data, int* sum) {
+int find_horizontal() {
     int find = 0;
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            int left = data[row * cols + col];
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLS; col++) {
+            int left = DATA[row * COLS + col];
             // 取得第col個元素，並往下找相同的值（如果中間有阻礙，則停止）
-            for (int col2 = col + 1; col2 < cols; col2++) {
-                if (data[row * cols + col2] >= 0) {
-                    if (data[row * cols + col2] == left) {
-                        *sum += left;
-                        data[row * cols + col2] = -1;
-                        data[row * cols + col] = -1;
+            for (int col2 = col + 1; col2 < COLS; col2++) {
+                if (DATA[row * COLS + col2] >= 0) {
+                    if (DATA[row * COLS + col2] == left) {
+                        SUM += left;
+                        DATA[row * COLS + col2] = -1;
+                        DATA[row * COLS + col] = -1;
                         find += 1;
+                        print_grid();
                     }
                     break;
                 }
@@ -47,20 +64,17 @@ int find_horizontal(int cols, int rows, int* data, int* sum) {
 }
 
 int main(int argc, char** argv) {
-    int n, m;
-    scanf("%d %d", &n, &m);
-    int* data = malloc(n * m * sizeof(int));
-    for (int row = 0; row < n; row++) {
-        for (int col = 0; col < m; col++) {
-            scanf("%d", &data[row * m + col]);
+    scanf("%d %d", &ROWS, &COLS);
+    DATA = malloc(ROWS * COLS * sizeof(int));
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLS; col++) {
+            scanf("%d", &DATA[row * COLS + col]);
         }
     }
-
-    int small_sum;
-    int sum = 0;
-    while (find_horizontal(m, n, data, &sum) || find_vertical(m, n, data, &sum)) {
+    print_grid();
+    while (find_horizontal() || find_vertical()) {
     }
 
-    printf("%d\n", sum);
+    printf("%d\n", SUM);
     return 0;
 }
